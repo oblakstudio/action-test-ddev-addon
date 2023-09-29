@@ -1,0 +1,64 @@
+name: Test a DDEV addon
+description: "Runs a test suite for a DDEV addon"
+branding:
+  icon: "check-square"
+  color: "blue"
+inputs:
+  github_token:
+    description: "Allows ddev get to use a github token to prevent rate limiting by tests"
+    required: false
+  debug_enabled:
+    description: Debug with tmate
+    required: false
+    default: "no"
+  ddev_version:
+    description: DDEV version to test
+    required: false
+    default: "stable"
+  test_type:
+    description: Test type to run. Can be "local" or "release"
+    required: false
+    default: "local"
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Homebrew
+      id: set-up-homebrew
+      uses: Homebrew/actions/setup-homebrew@master
+    - name: Environment setup
+      run: |
+        brew tap bats-core/bats-core
+        brew install bats-core bats-support bats-assert mkcert
+        mkcert -install
+      shell: bash
+
+    - name: Use ddev edge
+      if: inputs.ddev_version == 'edge'
+      run: brew install ddev/ddev-edge/ddev
+      shell: bash
+
+    - name: Use ddev HEAD
+      if: inputs.ddev_version == 'HEAD'
+      run: brew install --HEAD ddev/ddev/ddev
+      shell: bash
+
+    - name: Use ddev stable
+      if: inputs.ddev_version == 'stable'
+      run: brew install ddev/ddev/ddev
+      shell: bash
+
+    - name: Download docker images
+      run: ddev debug download-images >/dev/null
+      shell: bash
+
+    - name: tmate debugging session
+      uses: mxschmitt/action-tmate@v3
+      with:
+        limit-access-to-actor: true
+        github-token: ${{ inputs.github_token }}
+      if: inputs.debug_enabled == 'true'
+
+    - name: Run BATS
+      run: bats tests --filter-tags ${{ inputs.test_type }}
+      shell: bash
