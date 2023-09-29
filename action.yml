@@ -20,6 +20,11 @@ inputs:
     required: false
     default: "local"
 
+outputs:
+  test_result:
+    description: "Test result"
+    value: ${{ steps.bats.outputs.test_result }}
+
 runs:
   using: composite
   steps:
@@ -60,5 +65,6 @@ runs:
       if: inputs.debug_enabled == 'true'
 
     - name: Run BATS
-      run: bats tests --filter-tags ${{ inputs.test_type }}
+      id: bats
+      run: echo "test_result=$(bats tests -F tap --filter-tags ${{ inputs.test_type }})"
       shell: bash
