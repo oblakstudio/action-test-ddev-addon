@@ -1,4 +1,4 @@
-name: Test a DDEV addon
+name: Test DDEV addon
 description: "Runs a test suite for a DDEV addon"
 branding:
   icon: "check-square"
