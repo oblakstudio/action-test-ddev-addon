@@ -18,12 +18,7 @@ inputs:
   test_type:
     description: Test type to run. Can be "local" or "release"
     required: false
-    default: "local"
-
-outputs:
-  test_result:
-    description: "Test result"
-    value: ${{ steps.bats.outputs.test_result }}
+    default: ""
 
 runs:
   using: composite
@@ -64,10 +59,16 @@ runs:
         github-token: ${{ inputs.github_token }}
       if: inputs.debug_enabled == 'true'
 
-    - name: Run BATS
-      id: bats
-      run: |
-        echo "test_result<<EOF" >> $GITHUB_OUTPUT
-        bats tests -F tap --filter-tags ${{ inputs.test_type }} >> $GITHUB_OUTPUT
-        echo "EOF" >> $GITHUB_OUTPUT
+    - name: Run BATS (without tags)
+      if: inputs.test_type == ''
+      env:
+        DDEV_GITHUB_TOKEN: ${{ inputs.github_token }}
+      run: bats tests
+      shell: bash
+
+    - name: Run BATS (with tags)
+      if: inputs.test_type != ''
+      env:
+        DDEV_GITHUB_TOKEN: ${{ inputs.github_token }}
+      run: bats tests --filter-tags ${{ inputs.test_type }}
       shell: bash
