@@ -5,18 +5,27 @@ branding:
   color: "blue"
 inputs:
   github_token:
-    description: "Allows ddev get to use a github token to prevent rate limiting by tests"
+    description: |
+      Allows ddev get to use a github token to prevent rate limiting by tests
+      In almost any forseeable case you can use ${{secrets.GITHUB_TOKEN}} here
     required: false
   debug_enabled:
-    description: Debug with tmate
+    description: |
+      Debug the test suite by opening a tmate session
     required: false
     default: "no"
   ddev_version:
-    description: DDEV version to test
+    description: |
+      DDEV version to test against
+      Can be "edge", "HEAD" or "stable"
     required: false
     default: "stable"
   test_type:
-    description: Test type to run. Can be "local" or "release"
+    description: |
+      Test type to run.
+      We recommend tagging your bats tests with "local" and "release"
+      Local tests will get the version of the addon in the branch / commit you are testing
+      Release tests will get the version of the addon from the github using latest release
     required: false
     default: ""
 
