@@ -67,5 +67,7 @@ runs:
     - name: Run BATS
       id: bats
       run: |
-        echo "test_result=$(bats tests -F tap --filter-tags ${{ inputs.test_type }})" >> $GITHUB_OUTPUT
+        echo "test_result<<EOF" >> $GITHUB_OUTPUT
+        bats tests -F tap --filter-tags ${{ inputs.test_type }} >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
       shell: bash
