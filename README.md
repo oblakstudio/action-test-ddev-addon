@@ -9,8 +9,6 @@ This action tests your custom DDEV addon using Bash Automated Testing System. It
 
 See [action.yml](action.yml)
 
-## Usage
-
 ```yaml
 - name: Test DDEV addon
   uses: oblakstudio/action-test-ddev-addon@v1
