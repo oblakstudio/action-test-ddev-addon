@@ -37,7 +37,7 @@ runs:
       uses: Homebrew/actions/setup-homebrew@master
     - name: Environment setup
       run: |
-        brew tap bats-core/bats-core
+        brew tap kaos/shell
         brew install bats-core bats-support bats-assert mkcert
         mkcert -install
       shell: bash
