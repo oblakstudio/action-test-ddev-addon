@@ -7,7 +7,7 @@ inputs:
   github_token:
     description: |
       Allows ddev get to use a github token to prevent rate limiting by tests
-      In almost any forseeable case you can use ${{secrets.GITHUB_TOKEN}} here
+      In almost any forseeable case you can use secrets.GITHUB_TOKEN here
     required: false
   debug_enabled:
     description: |
